@@ -1,0 +1,25 @@
+# Render blueprint for MovieLinkBD (free web service, SQLite file DB).
+# Deploy: push this folder to a GitHub repo, then in Render Dashboard:
+#   New > Web Service > Build and deploy from a Git repository > pick the repo.
+# Render reads this file automatically (or fill the same values by hand).
+services:
+  - type: web
+    name: movielinkbd
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ADMIN_PIN
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      # SQLite file location. On the free plan there is NO persistent disk,
+      # so the DB file lives on the ephemeral filesystem and WILL reset when
+      # the service restarts / redeploys. For real persistence upgrade to a
+      # paid instance and attach a disk, then set:
+      #   DATABASE_PATH: /var/data/movielinkbd.db
+      - key: DATABASE_PATH
+        value: data/movielinkbd.db
